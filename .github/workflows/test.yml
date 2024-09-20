@@ -25,6 +25,8 @@ jobs:
       EXPECTED: ${{ matrix.cases.expected }}
 
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Generate Major Tag
         id: generate-tag
         uses: ./
