@@ -2,7 +2,9 @@ name: Test
 
 on:
   push:
-    paths: action.yml
+    paths:
+      - action.yml
+      - .github/**/*.yml
 
 jobs:
   test:
@@ -26,7 +28,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Generate Major Tag
         id: generate-tag
         uses: ./
