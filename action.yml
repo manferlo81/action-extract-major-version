@@ -1,0 +1,32 @@
+name: Generate Major Version Tag Name
+description: A composite action to generate a major version tag name from full version tag name
+
+branding:
+  icon: tag
+  color: green
+
+author: Manuel Fernández
+
+inputs:
+  tag-name:
+    description: The tag name to be processed
+    required: false
+    default: ${{ github.ref_name }}
+
+outputs:
+  major-tag:
+    description: The processed major tag
+    value: ${{ steps.generate-tag.outputs.TAG }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup NodeJS v20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+
+    - name: Generate Major Tag Name
+      id: generate-tag
+      shell: bash
+      run: node -e "console.log('TAG='+process.argv[1].split('.')[0])" "${{ inputs.tag-name }}" >> $GITHUB_OUTPUT

@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    paths: action.yml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        cases:
+          - input: v0.0.2
+            expected: v0
+          - input: v1.0.0
+            expected: v1
+          - input: v1.2.4
+            expected: v1
+          - input: v5.3.3
+            expected: v5
+
+    env:
+      INPUT: ${{ matrix.cases.input }}
+      EXPECTED: ${{ matrix.cases.expected }}
+
+    steps:
+      - name: Generate Major Tag
+        id: generate-tag
+        uses: ./
+        with:
+          tag-name: ${{ env.INPUT }}
+          
+      - name: "Show Error"
+        env:
+          GENERATED: ${{ steps.generate-tag.outputs.major-tag }}
+        if: ${{ env.GENERATED != env.EXPECTED }}
+        run: |
+          echo "::error::Expected ${{ env.EXPECTED }} from ${{ env.INPUT }}, got ${{ env.GENERATED }}"
+          exit 1
